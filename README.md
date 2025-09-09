@@ -24,3 +24,7 @@ Lokalno: pokreni backend u `app-backend` (**npm install && npm start**), zatim o
 
 ## Zaduženja (planirana)
 - Sara: prototip (frontend + backend), dokumentacija (Use Case, Class, Sequence), korisničke upute i screenshots.
+
+---
+📌 Dnevni napredak (9.9.2025.): dodan login, UI i preporuke
+
