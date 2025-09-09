@@ -1,64 +1,600 @@
 <!doctype html>
 <html lang="hr">
 <head>
-<meta charset="utf-8">
-<title>Plan&Go</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Plan&Go – prijava</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --green:#16a34a; --bg:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e5e7eb; --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:var(--bg)}
+    /* AUTH */
+    .auth-wrap{
+      min-height:100svh; display:grid; place-items:center;
+      background: radial-gradient(1200px 800px at 80% 20%, #19b65c55, transparent 60%), var(--green);
+      padding:24px; position:relative; overflow:hidden;
+    }
+    .cloud{
+      background:#fff; border-radius:40px; padding:28px; width:min(94vw, 520px);
+      box-shadow:0 24px 60px rgba(0,0,0,.20), 0 2px 10px rgba(0,0,0,.05);
+      position:relative; z-index:2;
+    }
+    .logo-row{display:flex; align-items:center; gap:12px; margin-bottom:14px; color:var(--green)}
+    .logo-mark{width:34px; height:34px; border-radius:10px; background:linear-gradient(145deg,#22c55e,#16a34a)}
+    h1{font-size:22px; margin:0}
+    label{display:block; font-size:12px; color:#334155; margin:10px 0 6px}
+    input{width:100%; padding:14px 16px; border:1px solid var(--border); border-radius:14px; font:inherit}
+    .btn{width:100%; padding:12px 14px; border-radius:14px; font-weight:600; cursor:pointer}
+    .btn.primary{background:#0f172a; color:#fff; border:none}
+    .btn.secondary{background:#fff; color:#0f172a; border:1px solid var(--border)}
+    .auth-actions{display:grid; gap:10px; margin-top:14px}
+    .muted{color:var(--muted); font-size:12px; text-align:center; margin-top:10px}
+    /* BIG EARTH on auth */
+    .earth-auth{
+      position:absolute; right:-6vw; top:50%; transform:translateY(-50%);
+      width:38vw; max-width:680px; aspect-ratio:1/1; display:none;
+    }
+    @media(min-width:1000px){ .earth-auth{display:block} }
+    .globe{
+      width:100%; height:100%; border-radius:50%;
+      background: radial-gradient(circle at 35% 35%, #bfe3ff, #6fb1ff 55%, #4d86cc);
+      box-shadow: 0 30px 80px rgba(0,0,0,.25), inset -20px -30px 60px rgba(0,0,0,.20);
+      position:relative; overflow:hidden; border:1px solid rgba(255,255,255,.3);
+    }
+    .globe .land{
+      position:absolute; inset:-15%; background-repeat:repeat-x; background-size:200% 100%;
+      filter:drop-shadow(0 0 6px rgba(0,0,0,.15));
+      animation:spin 24s linear infinite;
+      /* “tekstura” kontinenata (stilizirano) */
+      -webkit-mask: radial-gradient(70% 70% at 50% 50%, #000 72%, transparent 73%);
+              mask: radial-gradient(70% 70% at 50% 50%, #000 72%, transparent 73%);
+      background-image:
+        radial-gradient(ellipse 65% 90% at 20% 60%, #2e7d32 0 60%, transparent 62%),
+        radial-gradient(ellipse 70% 100% at 70% 45%, #388e3c 0 55%, transparent 57%),
+        radial-gradient(ellipse 55% 70% at 130% 50%, #2e7d32 0 60%, transparent 62%),
+        radial-gradient(ellipse 40% 50% at -20% 50%, #2e7d32 0 60%, transparent 62%);
+      opacity:.95;
+    }
+    .globe .grid{
+      position:absolute; inset:0; pointer-events:none; opacity:.35;
+      background-image:
+        radial-gradient(circle at 50% 50%, transparent 68%, rgba(255,255,255,.35) 69%, transparent 70%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.25) 0 1px, transparent 1px 20px),
+        repeating-linear-gradient(0deg,  rgba(255,255,255,.25) 0 1px, transparent 1px 20px);
+      border-radius:50%;
+      animation:spin 24s linear infinite reverse;
+    }
+    @keyframes spin{to{background-position:-200% 0}}
+    /* APP */
+    .app{max-width:1180px;margin:0 auto;padding:18px 16px 42px;display:none}
+    header.appbar{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:center;padding:12px 0 10px;margin-bottom:16px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand .logo-mark{width:28px;height:28px}
+    .brand span{font-weight:700}
+    .toolbar{display:flex;gap:8px;align-items:center}
+    .btn.link{background:transparent;border:none;color:var(--green);font-weight:600;cursor:pointer}
+    .grid{display:grid;gap:16px}
+    @media(min-width:1000px){ .grid{grid-template-columns:1.3fr 1fr} }
+    .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:0 8px 22px rgba(2,6,23,.05)}
+    h2{margin:0 0 10px;font-size:18px}
+    h3{margin:14px 0 8px;font-size:15px}
+    label.app{display:block;font-size:12px;color:#334155;margin:8px 0 6px}
+    input.app,select.app,button.app,textarea.app{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font:inherit}
+    textarea.app{min-height:82px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    ul{margin:8px 0 0;padding-left:18px}
+    .hint{color:var(--muted);font-size:12px;margin-top:6px}
+    .total{margin-top:8px;font-weight:700}
+    .sugs{margin-top:6px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .sugs button{display:block;width:100%;text-align:left;padding:10px 12px;background:#fff;border:0;border-top:1px solid var(--border);cursor:pointer}
+    .sugs button:first-child{border-top:0}
+    .sugs button:hover{background:#f8fafc}
+    .toast{position:fixed;right:16px;bottom:16px;background:#111827;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.25s}
+    .toast.show{opacity:1;transform:none}
+  </style>
 </head>
 <body>
-<h1>Plan&Go</h1>
-<button onclick="loadTrips()">Osvježi listu</button>
-<ul id="trips"></ul>
 
-<h2>Novo putovanje</h2>
-<input id="title" placeholder="Naziv">
-<input id="start" type="date">
-<input id="end" type="date">
-<button onclick="createTrip()">Spremi</button>
+  <!-- AUTH -->
+  <section id="auth" class="auth-wrap">
+    <div class="cloud">
+      <div class="logo-row">
+        <div class="logo-mark"></div>
+        <h1>Plan&Go</h1>
+      </div>
 
-<h2>Dodaj aktivnost</h2>
-<input id="tripIdAct" placeholder="Trip ID">
-<input id="day" placeholder="Dan">
-<input id="actTitle" placeholder="Naslov">
-<button onclick="addActivity()">Dodaj</button>
-<ul id="acts"></ul>
+      <label for="email">Email</label>
+      <input id="email" placeholder="ime.prezime@email.com" />
 
-<h2>Dodaj trošak</h2>
-<input id="tripIdExp" placeholder="Trip ID">
-<input id="amount" type="number">
-<input id="category" placeholder="Kategorija">
-<button onclick="addExpense()">Dodaj</button>
-<div id="total"></div>
+      <label for="password">Lozinka</label>
+      <input id="password" type="password" placeholder="••••••••" />
+
+      <div class="auth-actions">
+        <button class="btn primary" onclick="login()">Prijava</button>
+        <div class="btn secondary" onclick="signup()">Izradi račun</div>
+      </div>
+      <p class="muted">Napomena: demo prijava – podaci se čuvaju lokalno na ovom računalu.</p>
+    </div>
+
+    <!-- BIG EARTH (auth only) -->
+    <div class="earth-auth" aria-hidden="true">
+      <div class="globe">
+        <div class="land"></div>
+        <div class="grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="app" class="app">
+    <header class="appbar">
+      <div class="brand">
+        <div class="logo-mark" style="background:linear-gradient(145deg,#22c55e,#16a34a)"></div><span>Plan&Go</span>
+      </div>
+      <div class="toolbar">
+        <button class="btn link" onclick="logout()">Odjava</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Nova tura -->
+      <div class="card">
+        <h2>Nova tura</h2>
+        <label class="app">Naziv</label>
+        <input class="app" id="title" placeholder="npr. Barcelona" oninput="titleTypeahead()" />
+        <div id="titleSugs" class="sugs" style="display:none"></div>
+
+        <div class="row">
+          <div>
+            <label class="app">Početak</label>
+            <input class="app" id="start" type="date" />
+          </div>
+          <div>
+            <label class="app">Kraj</label>
+            <input class="app" id="end" type="date" />
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <button class="app" style="background:var(--green);border:none;color:#fff" onclick="createTrip()">Spremi putovanje</button>
+          <button class="app" onclick="loadTrips()">Osvježi listu</button>
+        </div>
+        <p id="createMsg" class="hint"></p>
+      </div>
+
+      <!-- Moja putovanja -->
+      <div class="card">
+        <h2>Moja putovanja</h2>
+        <label class="app">Odaberi putovanje</label>
+        <select class="app" id="tripSelect" onchange="onTripChange()">
+          <option value="">— odaberi —</option>
+        </select>
+        <div id="tripSummary" class="hint" style="margin-top:8px"></div>
+
+        <h3 style="margin-top:14px">Sva putovanja</h3>
+        <div id="listContainer" class="hint">Lista je prazna – dodaj najprije neku turu.</div>
+
+        <!-- Export / Import -->
+        <div class="row" style="margin-top:12px">
+          <button class="app" onclick="exportTrips()">Izvezi planove (JSON)</button>
+          <label class="app" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importTrips(this.files[0])">
+            <span>Uvezi planove (JSON)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Aktivnosti -->
+      <div class="card">
+        <h2>Aktivnosti</h2>
+        <div class="hint">Prvo gore odaberi putovanje.</div>
+        <div class="row">
+          <div>
+            <label class="app">Dan</label>
+            <input class="app" id="day" placeholder="Dan 1" />
+          </div>
+          <div>
+            <label class="app">Naslov aktivnosti</label>
+            <input class="app" id="activityTitle" placeholder="npr. Sagrada Familia" oninput="activityTypeahead()" />
+            <div id="actSugs" class="sugs" style="display:none"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label class="app">Vrijeme</label>
+            <input class="app" id="time" placeholder="10:00" />
+          </div>
+          <div>
+            <label class="app">Bilješka</label>
+            <input class="app" id="note" placeholder="kupiti ulaznice online" />
+          </div>
+        </div>
+        <button class="app" style="margin-top:8px;background:var(--green);border:none;color:#fff" onclick="addActivity()">Dodaj aktivnost</button>
+        <ul id="activities"></ul>
+      </div>
+
+      <!-- Troškovi -->
+      <div class="card">
+        <h2>Troškovi i budžet</h2>
+        <div class="row">
+          <div>
+            <label class="app">Iznos (EUR)</label>
+            <input class="app" id="amount" type="number" step="0.01" />
+          </div>
+          <div>
+            <label class="app">Kategorija</label>
+            <select class="app" id="category">
+              <option value="smjestaj">Smještaj</option>
+              <option value="prijevoz">Prijevoz</option>
+              <option value="hrana">Hrana</option>
+              <option value="ostalo">Ostalo</option>
+            </select>
+          </div>
+        </div>
+        <label class="app">Bilješka</label>
+        <input class="app" id="expNote" placeholder="npr. bus s aerodroma 6€" />
+        <button class="app" style="margin-top:8px;background:var(--green);border:none;color:#fff" onclick="addExpense()">Dodaj trošak</button>
+        <div id="total" class="total"></div>
+      </div>
+
+      <!-- Preporuke + smještaj (uživo) -->
+      <div class="card">
+        <h2>Preporuke i smještaj</h2>
+
+        <label class="app">Tvoje preferencije (upiši što želiš)</label>
+        <input class="app" id="prefInput" placeholder="npr. plaže, muzeji, noćni život" oninput="suggestDestinations()" />
+        <div id="recoList" class="sugs" style="display:none"></div>
+        <p class="hint">Preporuke se ažuriraju uživo dok tipkaš.</p>
+
+        <h3 style="margin-top:14px">Smještaj</h3>
+        <label class="app">Grad za smještaj</label>
+        <input class="app" id="lodgingCity" placeholder="npr. Barcelona" />
+        <div class="row" style="margin-top:8px">
+          <button class="app" onclick="openBookingManual()">Pretraži na Booking</button>
+          <button class="app" onclick="openAirbnbManual()">Pretraži na Airbnb</button>
+        </div>
+        <p class="hint">Ako je odabrano putovanje, polje se automatski popuni nazivom; slobodno promijeni.</p>
+      </div>
+
+      <!-- Mapa -->
+      <div class="card">
+        <h2>Lokacije na karti</h2>
+        <label class="app">Upiši lokaciju</label>
+        <input class="app" id="mapQuery" placeholder="npr. Sagrada Familia Barcelona" />
+        <div class="row" style="margin-top:8px">
+          <button class="app" onclick="openMap()">Otvori na Google Maps</button>
+          <button class="app" onclick="openRoute()">Ruta: smještaj → lokacija</button>
+        </div>
+        <p class="hint">Za rutu, kao polazište koristi naziv putovanja (pretpostavka: smještaj).</p>
+      </div>
+
+      <!-- Dnevnik + To-Do -->
+      <div class="card">
+        <h2>Dnevnik & To-Do</h2>
+
+        <h3>Dnevnik</h3>
+        <label class="app">Unos</label>
+        <textarea class="app" id="journalText" placeholder="Doživljaji, bilješke..."></textarea>
+        <button class="app" style="margin-top:8px" onclick="saveJournal()">Spremi dnevnik</button>
+        <p class="hint" id="journalSaved"></p>
+
+        <h3 style="margin-top:14px">To-Do</h3>
+        <div class="row">
+          <input class="app" id="todoInput" placeholder="Dodaj zadatak" />
+          <button class="app" onclick="addTodo()">Dodaj</button>
+        </div>
+        <ul id="todoList"></ul>
+        <button class="app" onclick="clearDone()">Ukloni označene</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
 
 <script>
-const API = 'http://localhost:3000';
+/* ===== AUTH (demo) ===== */
+function setView(loggedIn){
+  document.getElementById('auth').style.display = loggedIn ? 'none' : 'grid';
+  document.getElementById('app').style.display  = loggedIn ? 'block' : 'none';
+  if(loggedIn){ loadTrips(); }
+}
+function login(){
+  const email = document.getElementById('email').value.trim();
+  const pass  = document.getElementById('password').value.trim();
+  if(!email || !pass){ return toast('Upiši email i lozinku.'); }
+  localStorage.setItem('pg_user', JSON.stringify({email}));
+  setView(true); toast('Dobrodošla! ✅');
+}
+function signup(){
+  const email = document.getElementById('email').value.trim();
+  const pass  = document.getElementById('password').value.trim();
+  if(!email || !pass){ return toast('Za izradu računa upiši email i lozinku.'); }
+  localStorage.setItem('pg_user', JSON.stringify({email}));
+  setView(true); toast('Račun izrađen! ✅');
+}
+function logout(){ localStorage.removeItem('pg_user'); setView(false); }
 
+/* ===== Helpers ===== */
+const API = 'http://localhost:3000';
+let selectedTripId = '';
+let tripsCache = [];
+function toast(msg){ const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), 1600); }
+function currentTrip(){ if(!selectedTripId) return null; return tripsCache.find(t => String(t.id)===String(selectedTripId)) || null; }
+function storageKey(suffix){ return `pg_${suffix}_${selectedTripId||'none'}`; }
+function saveLocalTrips(){ localStorage.setItem('pg_trips_cache', JSON.stringify(tripsCache||[])); }
+function loadLocalTrips(){ try{return JSON.parse(localStorage.getItem('pg_trips_cache')||'[]')}catch{return []} }
+
+/* ===== API ===== */
 async function loadTrips(){
-  const res = await fetch(API+'/trips'); const trips = await res.json();
-  document.getElementById('trips').innerHTML = trips.map(t=>'<li>#'+t.id+' '+t.title+'</li>').join('');
+  try{
+    const res = await fetch(API+'/trips');
+    tripsCache = await res.json();
+  }catch(e){
+    // backend ne radi → prikaži lokalnu kopiju ako postoji
+    tripsCache = loadLocalTrips();
+    const cont = document.getElementById('listContainer');
+    if(tripsCache.length){
+      cont.innerHTML = '<ul>'+tripsCache.map(t=>`<li>#${t.id} ${t.title} (${t.start} → ${t.end})</li>`).join('')+'</ul>';
+      const sel = document.getElementById('tripSelect');
+      sel.innerHTML = '<option value="">— odaberi —</option>';
+      tripsCache.forEach(t=>{ const o=document.createElement('option'); o.value=t.id; o.textContent=`#${t.id} ${t.title}`; sel.appendChild(o); });
+    }else{
+      cont.textContent = 'Ne mogu dohvatiti listu (backend ne radi?).';
+    }
+    return;
+  }
+
+  // ispis liste
+  const cont = document.getElementById('listContainer');
+  if(!tripsCache.length){ cont.innerHTML = '<div class="hint">Lista je prazna – dodaj najprije neku turu.</div>'; }
+  else { cont.innerHTML = '<ul>'+tripsCache.map(t=>`<li>#${t.id} ${t.title} (${t.start} → ${t.end})</li>`).join('')+'</ul>'; }
+
+  // padajući izbornik
+  const sel = document.getElementById('tripSelect');
+  sel.innerHTML = '<option value="">— odaberi —</option>';
+  tripsCache.forEach(t=>{ const opt=document.createElement('option'); opt.value=t.id; opt.textContent=`#${t.id} ${t.title}`; sel.appendChild(opt); });
+
+  // zadrži prethodni izbor
+  if(selectedTripId){ sel.value = selectedTripId; onTripChange(); }
+
+  // automatski popuni polje “Grad za smještaj”
+  const t = currentTrip();
+  document.getElementById('lodgingCity').value = t ? t.title : '';
+
+  // spremi lokalnu kopiju
+  saveLocalTrips();
 }
+
 async function createTrip(){
-  const title=document.getElementById('title').value;
-  const start=document.getElementById('start').value;
-  const end=document.getElementById('end').value;
-  await fetch(API+'/trips',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,start,end})});
-  loadTrips();
+  const title = document.getElementById('title').value.trim();
+  const start = document.getElementById('start').value;
+  const end   = document.getElementById('end').value;
+  if(!title || !start || !end){ return toast('Ispuni sva polja.'); }
+
+  const res = await fetch(API+'/trips',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,start,end})});
+  const ok = res.ok;
+  document.getElementById('createMsg').textContent = ok ? 'Putovanje kreirano.' : 'Greška pri spremanju.';
+  if(ok){ toast('Spremljeno ✅'); await loadTrips(); }
 }
+
+function onTripChange(){
+  selectedTripId = document.getElementById('tripSelect').value || '';
+  const t = currentTrip();
+  document.getElementById('tripSummary').textContent = t ? `#${t.id} • ${t.title} • ${t.start} → ${t.end}` : '';
+  document.getElementById('activities').innerHTML = '';
+  document.getElementById('total').textContent = '';
+  document.getElementById('lodgingCity').value = t ? t.title : '';
+  loadJournal(); renderTodos();
+}
+
 async function addActivity(){
-  const id=document.getElementById('tripIdAct').value;
-  const day=document.getElementById('day').value;
-  const title=document.getElementById('actTitle').value;
-  const res=await fetch(API+'/trips/'+id+'/activities',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({day,title})});
-  const data=await res.json();
-  document.getElementById('acts').innerHTML+='<li>'+data.day+' '+data.title+'</li>';
+  if(!selectedTripId){ return toast('Prvo odaberi putovanje.'); }
+  const day  = document.getElementById('day').value.trim();
+  const title= document.getElementById('activityTitle').value.trim();
+  const time = document.getElementById('time').value.trim();
+  const note = document.getElementById('note').value.trim();
+  if(!day || !title){ return toast('Dan i naslov su obavezni.'); }
+
+  const res = await fetch(`${API}/trips/${selectedTripId}/activities`, {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({day, title, time, note})
+  });
+  const data = await res.json();
+  if(!res.ok){ return toast(data.error || 'Greška.'); }
+
+  const li = document.createElement('li');
+  li.textContent = `${data.day} – ${data.title}${data.time?(' ('+data.time+')'):''}${data.note?(' – '+data.note):''}`;
+  document.getElementById('activities').appendChild(li);
+  toast('Aktivnost dodana ✅');
+  await loadTrips();
 }
+
 async function addExpense(){
-  const id=document.getElementById('tripIdExp').value;
-  const amount=document.getElementById('amount').value;
-  const category=document.getElementById('category').value;
-  const res=await fetch(API+'/trips/'+id+'/expenses',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount,category})});
-  const data=await res.json();
-  document.getElementById('total').innerText='Ukupno: '+data.total;
+  if(!selectedTripId){ return toast('Prvo odaberi putovanje.'); }
+  const amount = document.getElementById('amount').value;
+  const category = document.getElementById('category').value;
+  const note = document.getElementById('expNote').value;
+
+  const res = await fetch(`${API}/trips/${selectedTripId}/expenses`, {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({amount, category, note})
+  });
+  const data = await res.json();
+  if(!res.ok){ return toast(data.error || 'Greška.'); }
+  document.getElementById('total').textContent = 'Ukupno potrošeno: ' + data.total.toFixed(2) + ' €';
+  toast('Trošak dodan ✅');
+  await loadTrips();
 }
+
+/* ===== City & Activity typeahead ===== */
+const CITY_DB = ['Barcelona','Lisabon','Prag','Budimpešta','Zadar','Kopenhagen','Amsterdam','Dublin','Milano','Sevilla','Krakow','Pariz','London','Rim'];
+const CITY_POI = {
+  'Barcelona':['Sagrada Familia','Park Güell','La Boqueria','Casa Batlló','Barceloneta'],
+  'Lisabon':['Torre de Belém','Most 25 de Abril','Alfama','Elevador de Santa Justa'],
+  'Prag':['Karlov most','Praški dvorac','Astronomski sat','Stari trg'],
+  'Budimpešta':['Termalne kupke','Lančani most','Ribarska tvrđava','Bazilika sv. Stjepana'],
+  'Zadar':['Pozdrav Suncu','Morske orgulje','Stari grad','Nin'],
+  'Kopenhagen':['Nyhavn','Mala sirena','Tivoli','Rosenborg'],
+  'Amsterdam':['Rijksmuseum','Van Gogh muzej','Kuća Anne Frank','Kanalska krstarenja'],
+  'Dublin':['Guinness Storehouse','Trinity College','Temple Bar','Kilmainham Gaol'],
+  'Milano':['Duomo','Galleria Vittorio Emanuele II','Navigli','La Scala']
+};
+function titleTypeahead(){
+  const q = document.getElementById('title').value.toLowerCase();
+  const box = document.getElementById('titleSugs');
+  if(!q){ box.style.display='none'; box.innerHTML=''; return; }
+  const list = CITY_DB.filter(c=>c.toLowerCase().includes(q)).slice(0,6);
+  if(!list.length){ box.style.display='none'; box.innerHTML=''; return; }
+  box.style.display='block';
+  box.innerHTML = list.map(c=>`<button type="button" onclick="pickTitle('${c}')">${c}</button>`).join('');
+}
+function pickTitle(city){
+  document.getElementById('title').value = city;
+  document.getElementById('lodgingCity').value = city;
+  document.getElementById('titleSugs').style.display='none';
+  activityTypeahead(); // osvježi potencijalne POI prijedloge
+}
+function activityTypeahead(){
+  const city = document.getElementById('title').value.trim();
+  const q = document.getElementById('activityTitle').value.toLowerCase();
+  const box = document.getElementById('actSugs');
+  const arr = CITY_POI[city]||[];
+  const list = (q?arr.filter(x=>x.toLowerCase().includes(q)):arr).slice(0,6);
+  if(!list.length){ box.style.display='none'; box.innerHTML=''; return; }
+  box.style.display='block';
+  box.innerHTML = list.map(x=>`<button type="button" onclick="pickActivity('${x}')">${x}</button>`).join('');
+}
+function pickActivity(x){
+  document.getElementById('activityTitle').value = x;
+  document.getElementById('actSugs').style.display='none';
+}
+
+/* ===== Preporuke (uživo) ===== */
+const RECO_DB = [
+  {city:'Barcelona', tags:['plaže','djeca','muzeji','arhitektura','noćni život']},
+  {city:'Lisabon', tags:['ocean','stari grad','sunce','pogledi']},
+  {city:'Prag', tags:['povijest','stari grad','romantično','muzeji']},
+  {city:'Budimpešta', tags:['termalne kupke','noćni život','rijeka']},
+  {city:'Zadar', tags:['more','blizu','izleti','plaže']},
+  {city:'Kopenhagen', tags:['sigurno','muzeji','parkovi','obitelj']},
+  {city:'Amsterdam', tags:['kanali','izlasci','muzeji','bicikli']},
+  {city:'Dublin', tags:['it','konferencije','pubovi']},
+  {city:'Milano', tags:['moda','sajmovi','umjetnost']}
+];
+function suggestDestinations(){
+  const q = document.getElementById('prefInput').value.toLowerCase();
+  const box = document.getElementById('recoList');
+  const keys = q.split(',').map(s=>s.trim()).filter(Boolean);
+  if(keys.length===0){ box.style.display='none'; box.innerHTML=''; return; }
+  const scored = RECO_DB.map(x=>{
+    const score = keys.reduce((acc,k)=> acc + (x.tags.some(t=>t.toLowerCase().includes(k))?1:0), 0);
+    return {...x, score};
+  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,6);
+  if(!scored.length){ box.style.display='none'; box.innerHTML=''; return; }
+  box.style.display='block';
+  box.innerHTML = scored.map(x=>`<button type="button" onclick="pickTitle('${x.city}')"><b>${x.city}</b> — ${x.score} poklapanja</button>`).join('');
+}
+
+/* ===== Smještaj (ručni grad) ===== */
+function openBookingManual(){
+  const city = document.getElementById('lodgingCity').value.trim();
+  const t = currentTrip();
+  const start = t?.start || '';
+  const end   = t?.end || '';
+  if(!city){ return toast('Upiši grad.'); }
+  const url = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(city)}${start&&end?`&checkin=${start}&checkout=${end}`:''}`;
+  window.open(url,'_blank');
+}
+function openAirbnbManual(){
+  const city = document.getElementById('lodgingCity').value.trim();
+  const t = currentTrip();
+  const start = t?.start || '';
+  const end   = t?.end || '';
+  if(!city){ return toast('Upiši grad.'); }
+  const url = `https://www.airbnb.com/s/${encodeURIComponent(city)}/homes${start&&end?`?checkin=${start}&checkout=${end}`:''}`;
+  window.open(url,'_blank');
+}
+
+/* ===== Mapa ===== */
+function openMap(){
+  const q = document.getElementById('mapQuery').value.trim();
+  if(!q){ return toast('Upiši lokaciju.'); }
+  const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+  window.open(url, '_blank');
+}
+function openRoute(){
+  const q = document.getElementById('mapQuery').value.trim();
+  const t = currentTrip();
+  if(!t || !q){ return toast('Odaberi putovanje i upiši lokaciju.'); }
+  const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(t.title)}&destination=${encodeURIComponent(q)}`;
+  window.open(url, '_blank');
+}
+
+/* ===== Dnevnik + To-Do (localStorage) ===== */
+function loadJournal(){ if(!selectedTripId) return; const txt = localStorage.getItem(storageKey('journal')) || ''; document.getElementById('journalText').value = txt; }
+function saveJournal(){
+  if(!selectedTripId) return toast('Odaberi putovanje.');
+  const val = document.getElementById('journalText').value;
+  localStorage.setItem(storageKey('journal'), val);
+  document.getElementById('journalSaved').textContent = 'Spremljeno lokalno ✅';
+  toast('Dnevnik spremljen');
+}
+function renderTodos(){
+  const ul = document.getElementById('todoList');
+  if(!selectedTripId){ ul.innerHTML=''; return; }
+  const items = JSON.parse(localStorage.getItem(storageKey('todos'))||'[]');
+  ul.innerHTML = items.map((t,i)=>`
+    <li>
+      <label style="display:flex;gap:8px;align-items:center">
+        <input type="checkbox" ${t.done?'checked':''} onchange="toggleTodo(${i}, this.checked)">
+        <span>${t.text}</span>
+      </label>
+    </li>`).join('');
+}
+function addTodo(){
+  if(!selectedTripId) return toast('Odaberi putovanje.');
+  const inp = document.getElementById('todoInput');
+  const text = inp.value.trim(); if(!text) return;
+  const items = JSON.parse(localStorage.getItem(storageKey('todos'))||'[]');
+  items.push({text, done:false});
+  localStorage.setItem(storageKey('todos'), JSON.stringify(items));
+  inp.value=''; renderTodos();
+}
+function toggleTodo(i, checked){
+  const items = JSON.parse(localStorage.getItem(storageKey('todos'))||'[]');
+  if(items[i]){ items[i].done = checked; localStorage.setItem(storageKey('todos'), JSON.stringify(items)); }
+}
+function clearDone(){
+  const items = JSON.parse(localStorage.getItem(storageKey('todos'))||'[]').filter(x=>!x.done);
+  localStorage.setItem(storageKey('todos'), JSON.stringify(items));
+  renderTodos();
+}
+
+/* ===== Export/Import ===== */
+function exportTrips(){
+  const data = JSON.stringify(tripsCache, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'planandgo-trips.json'; a.click();
+  URL.revokeObjectURL(url); toast('Izvoz završen');
+}
+function importTrips(file){
+  if(!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const arr = JSON.parse(r.result);
+      if(!Array.isArray(arr)) throw new Error();
+      tripsCache = arr; saveLocalTrips(); loadTrips(); toast('Uvoz gotov');
+    }catch{ toast('Neispravan JSON.'); }
+  };
+  r.readAsText(file);
+}
+
+/* start view */
+(function init(){ const u = localStorage.getItem('pg_user'); setView(!!u); })();
 </script>
 </body>
 </html>
