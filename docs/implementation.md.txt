@@ -1,0 +1,118 @@
+5. Implementacija
+
+Ovaj dokument opisuje kako je napravljena aplikacija Plan&Go: arhitektura, glavne datoteke, frontend i backend logika, offline podrška i način pokretanja.
+
+5.1 Arhitektura
+
+Aplikacija se sastoji od dvije glavne cjeline:
+
+Frontend: HTML datoteka (app-frontend/index.html) s ugrađenim CSS i JavaScriptom.
+Sučelje je jednostavno i moderno: zelena pozadina, bijele kartice, ikona aviona i dekor slike (Eiffel i Pisa) koje se pomiču dok korisnik skrola.
+Funkcionalnosti: prijava, kreiranje putovanja, aktivnosti, troškovi, preporuke, linkovi na Booking/Airbnb, Google Maps, dnevnik, to-do liste, te izvoz i uvoz plana u JSON formatu.
+Offline podrška: dnevnik i to-do uvijek rade lokalno, a putovanja, aktivnosti i troškovi se čuvaju lokalno ako backend nije dostupan.
+
+Backend (Node.js + Express): app-backend/server.js
+Jednostavan REST API koji omogućuje spremanje i dohvaćanje putovanja, aktivnosti i troškova.
+Podaci se u ovoj verziji čuvaju u memoriji, a u budućnosti bi se koristila baza podataka.
+
+5.2 Backend – glavni endpointi
+
+GET /trips – vraća listu putovanja.
+
+POST /trips – dodaje novo putovanje.
+
+POST /trips/:id/activities – dodaje aktivnost određenom putovanju.
+
+POST /trips/:id/expenses – dodaje trošak i vraća ukupno potrošeni iznos.
+
+Pokretanje backenda:
+
+cd app-backend
+npm install
+npm start
+
+
+Server se pokreće na http://localhost:3000.
+
+5.3 Frontend – glavne cjeline
+
+Prijava i odjava – korisnik unosi email i lozinku; podaci se čuvaju u localStorage.
+
+Putovanja – kreiranje, pregled i odabir putovanja.
+
+Aktivnosti – dodavanje aktivnosti po danima.
+
+Troškovi – unos iznosa i kategorija, automatski izračun ukupnog budžeta.
+
+Preporuke – jednostavna baza prijedloga (npr. plaže, muzeji, noćni život).
+
+Smještaj – otvaranje Booking i Airbnb stranica s gradom i datumima iz putovanja.
+
+Karte – otvaranje Google Maps za pretragu i rute.
+
+Dnevnik i To-Do – offline podrška pomoću localStorage.
+
+Izvoz i uvoz plana – JSON datoteke za dijeljenje među korisnicima.
+
+5.4 Offline podrška
+
+Ako backend nije dostupan, aplikacija koristi localStorage:
+
+Putovanja se spremaju lokalno s privremenim ID-em.
+
+Aktivnosti i troškovi se dodaju samo u korisničko sučelje i lokalnu memoriju.
+
+Dnevnik i to-do uvijek rade lokalno, nevezano uz backend.
+
+5.5 Korisničko iskustvo
+
+Aplikacija prikazuje jednostavne poruke (toast) kad nešto uspije ili kad korisnik pogriješi.
+Primjeri:
+
+„Prvo odaberi putovanje”
+
+„Ispuni sva polja”
+
+„Putovanje je kreirano”
+
+5.6 Stil i brending
+
+Zelena pozadina i bijele kartice.
+
+Font Poppins.
+
+Logo – ikona aviona.
+
+Dekor – slike Eiffelovog tornja (lijevo) i Kosog tornja u Pisi (desno) koje se pomiču pri skrolu.
+
+5.7 Pokretanje aplikacije
+
+Pokrenuti backend:
+cd app-backend && npm install && npm start
+
+Otvoriti frontend:
+app-frontend/index.html u pregledniku.
+
+5.8 Strukture podataka
+
+Trip: id, title, start, end, activities[], expenses[]
+
+Activity: id, day, title, time, note
+
+Expense: id, amount, category, note
+
+Journal: tripId, text (lokalno)
+
+Todo: tripId, text, done (lokalno)
+
+5.9 Moguća poboljšanja
+
+Stvarna baza podataka i korisnički računi.
+
+Prave integracije za hotele i letove.
+
+Kolaboracija u stvarnom vremenu.
+
+Mobilna verzija aplikacije.
+
+
