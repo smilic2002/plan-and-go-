@@ -1,6 +1,6 @@
 # Plan&Go
 
-**Sastav tima:** Sara [prezime]  
+**Sastav tima:** Sara Milić  
 **Fakultet informatike u Puli** – [link](https://fipu.unipu.hr)  
 **Kolegij:** Programsko inženjerstvo – [link](http://ntankovic.unipu.hr/pi)  
 **Mentor:** doc. dr. sc. Nikola Tanković – [link](http://ntankovic.unipu.hr)
